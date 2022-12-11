@@ -17,7 +17,7 @@ class ProductCategoryFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name'=>fake()->word()
         ];
     }
 }

@@ -14,7 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
+            // $table->integer('category_id');
+            // $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('product_categories');
             $table->string('name');
             $table->string('detail');
             $table->double('price');
