@@ -3,13 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\ProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\Product\ProductCollection;
 use App\Http\Resources\Product\ProductResource;
+use Symfony\Component\HttpFoundation\Response;
+use App\Exceptions\ProductNotBelongsToUser;
+use Auth;
+
 
 class ProductController extends Controller
 {
+
+
+        public function __construct()
+        {
+            // trazi autentikaciju za sve osim index i show stranicu
+            $this->middleware('auth:api')->except('index', 'show');
+        }
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -36,9 +50,24 @@ class ProductController extends Controller
      * @param  \App\Http\Requests\StoreProductRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreProductRequest $request)
+    public function store(ProductRequest $request)
     {
-        //
+        $product = new Product;
+        $product->name = $request->name;
+        $product->detail=$request->description;
+        $product->price = $request->price;
+        $product->stock=$request->stock;
+        $product->category_id=$request->category_id;
+        $product->discount=$request->discount;
+        $product->user_id=$request->user_id;
+
+        $product->save();
+
+        // 201 code --> created
+
+        return response([
+            'data'=>new ProductResource($product), Response::HTTP_CREATED
+        ]);
     }
 
     /**
@@ -72,7 +101,18 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+
+
+        $this->productUserCheck($product);
+
+
+        $request['detail'] = $request->description;
+        unset($request['description']);
+        $product->update($request->all());
+
+        return response([
+            'data'=>new ProductResource($product), Response::HTTP_CREATED
+        ]);
     }
 
     /**
@@ -83,6 +123,16 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $this->productUserCheck($product);
+        $product->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function productUserCheck(Product $product)
+    {
+        if(Auth::id()!=$product->user_id)
+        {
+            throw new ProductNotBelongsToUser;
+        }
     }
 }

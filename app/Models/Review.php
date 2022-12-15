@@ -9,6 +9,14 @@ class Review extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id', 'review', 'star', 
+    ];
+
+    // protected $guarderd=[
+    //     'product_id'
+    // ];
+
     public function product()
     {
         return $this->belongsTo(Product::class);

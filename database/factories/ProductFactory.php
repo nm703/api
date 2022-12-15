@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\ProductCategory;
-
+use App\Models\User;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
  */
@@ -19,6 +19,7 @@ class ProductFactory extends Factory
     {
         return [
             'category_id'=> ProductCategory::factory(),
+            'user_id'=> User::factory(),
             'name'=>fake()->word(),
             'detail'=>fake()->sentence(6),
             'price'=>fake()->randomFloat(3,10,100), //3 decimale, izmedju 10 i 100

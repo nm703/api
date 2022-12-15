@@ -17,12 +17,5 @@ Route::group(['prefix'=>'products'], function (){
 
 });
 
-// Route::group(['middleware' => 'client_credentials'], function () {
-//    //your route
 
-//     });
 
-// Route::group(['prefix'=>'products'], function (){
-//     Route::apiResource('/{product}/categories}', 'App\Http\Controllers\ProductCategoryController');
-
-// });
