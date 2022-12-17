@@ -30,7 +30,7 @@ class ProductRequest extends FormRequest
             'stock'=> 'required|max:6',
             'discount'=> 'required|max:2',
             'category_id'=> 'required|exists:App\Models\ProductCategory,id',
-            'user_id'=>'required|exists:App\Models\User,id'
+            'user_id'=>'exists:App\Models\User,id'
 
         ];
     }

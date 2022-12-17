@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\Product\ProductCollection;
 use App\Http\Resources\Product\ProductResource;
 use Symfony\Component\HttpFoundation\Response;
 use App\Exceptions\ProductNotBelongsToUser;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class ProductController extends Controller
@@ -31,7 +33,9 @@ class ProductController extends Controller
      */
     public function index()
     {
+       
         return ProductCollection::collection(Product::paginate(10));
+        
     }
 
     /**
@@ -59,7 +63,8 @@ class ProductController extends Controller
         $product->stock=$request->stock;
         $product->category_id=$request->category_id;
         $product->discount=$request->discount;
-        $product->user_id=$request->user_id;
+        // $product->user_id=$request->user_id;
+        $product->user_id= Auth::id();
 
         $product->save();
 

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductCategory;
-use App\Http\Requests\StoreProductCategoryRequest;
-use App\Http\Requests\UpdateProductCategoryRequest;
+use App\Http\Requests\ProductCategoryRequest;
+use App\Http\Resources\ProductCategory\ProductCategoryCollection;
+use App\Http\Resources\ProductCategory\ProductCategoryResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductCategoryController extends Controller
 {
@@ -15,7 +17,7 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        //
+        return ProductCategoryCollection::collection(ProductCategory::paginate(5));
     }
 
     /**
@@ -34,9 +36,19 @@ class ProductCategoryController extends Controller
      * @param  \App\Http\Requests\StoreProductCategoryRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreProductCategoryRequest $request)
+    public function store(ProductCategoryRequest $request)
     {
-        //
+        $cat = new ProductCategory;
+        $cat->name = $request->name;
+        
+
+        $cat->save();
+
+        // 201 code --> created
+
+        return response([
+            'data'=>new ProductCategoryResource($cat), Response::HTTP_CREATED
+        ]);
     }
 
     /**
@@ -81,6 +93,7 @@ class ProductCategoryController extends Controller
      */
     public function destroy(ProductCategory $productCategory)
     {
-        //
+        $productCategory->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

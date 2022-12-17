@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ReviewRequest extends FormRequest
+class ProductCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class ReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id'=> 'exists:App\Models\User,id',
-            'star'=> 'required|integer|between:0,5',
-            'review'=> 'required'
+            'name'=> 'required|max:255|unique:product_categories',
+
         ];
     }
 }
